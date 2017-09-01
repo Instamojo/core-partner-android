@@ -1,0 +1,243 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.reseller.fmgc.Partner.UpdateUser">
+
+
+    <!-- The ActionBar -->
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            tools:context="com.getmeashop.realestate.partner.EditInfo">
+
+
+            <TextView
+                android:id="@+id/store_logo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:textSize="18sp"
+                android:text="Edit your Payment Detail" />
+
+            <ImageView
+                android:id="@+id/store_logo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@+id/store_logo_text"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_no_image" />
+
+            <TextView
+                android:id="@+id/image_text"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/store_logo"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="Cheque image" />
+
+            <LinearLayout
+                android:id="@+id/plan_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_text"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Plan"
+                    android:paddingLeft="10dp"/>
+
+                <Spinner
+                    android:id="@+id/plan"
+                    android:paddingLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/plans">
+
+                </Spinner>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/date_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/plan_layout"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="start Date"
+                    android:paddingLeft="10dp" />
+
+                <TextView
+                    android:id="@+id/start_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Select Date"
+                    android:maxLines="1"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/days_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/date_layout"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                <com.getmeashop.realestate.partner.util.CustomTextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+                <EditText
+                    android:id="@+id/months"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:hint="Months"
+                    android:singleLine="true" />
+                </com.getmeashop.realestate.partner.util.CustomTextInputLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/amount_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/days_layout"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                <com.getmeashop.realestate.partner.util.CustomTextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+                <EditText
+                    android:id="@+id/amount_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:paddingLeft="10dp"
+                    android:maxLines="1"
+                    android:hint="Amount"
+                    android:singleLine="true" />
+                </com.getmeashop.realestate.partner.util.CustomTextInputLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/delivery_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/amount_layout"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                <com.getmeashop.realestate.partner.util.CustomTextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+                <EditText
+                    android:id="@+id/cheque_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:maxLines="1"
+                    android:hint="Cheque Number"
+                    android:singleLine="true" />
+                </com.getmeashop.realestate.partner.util.CustomTextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/add_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/delivery_layout">
+
+                <com.getmeashop.realestate.partner.util.CustomTextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+                <EditText
+                    android:id="@+id/bank_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:hint="Bank Name"
+                    android:singleLine="true" />
+
+                </com.getmeashop.realestate.partner.util.CustomTextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/contact_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_layout">
+
+                <CheckBox
+                    android:id="@+id/is_deposited"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:paddingLeft="10dp"
+                    android:text="Is cheque deposited" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/contact_layout"
+                android:layout_marginTop="15dp">
+
+                <Button
+                    android:id="@+id/update_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryLight"
+                    android:text="update"
+                    android:textColor="#ffffff" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

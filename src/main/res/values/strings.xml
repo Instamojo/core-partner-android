@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Partner</string>
+    <string name="add_user">Add User</string>
+    <string name="user_list">Manage Users</string>
+    <string name="logout">Logout</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_update_user">UpdateUser</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">Partner</string>
+    <string name="title_activity_update_app">Update</string>
+    <string name="parent_category">Select Parent Category</string>
+    <string name="error_config">Please set the %1$s constant and recompile the app.</string>
+    <string name="already_registered">Device is already registered on server.</string>
+    <string name="gcm_registered">From GCM: device successfully registered!</string>
+    <string name="gcm_unregistered">From GCM: device successfully unregistered!</string>
+    <string name="gcm_message">From GCM: you got message!</string>
+    <string name="gcm_error">From GCM: error (%1$s).</string>
+    <string name="gcm_recoverable_error">From GCM: recoverable error (%1$s).</string>
+    <string name="gcm_deleted">From GCM: server deleted %1$d pending messages!</string>
+
+    <string-array name="plans">
+        <item>----</item>
+        <item>Basic</item>
+        <item>Basic+</item>
+    </string-array>
+</resources>

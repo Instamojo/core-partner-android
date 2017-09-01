@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group android:id="@+id/product">
+        <item
+            android:id="@+id/add_user"
+            android:icon="@drawable/dash_add_cat"
+            android:title="@string/add_user" />
+
+        <item
+            android:id="@+id/manage_user"
+            android:icon="@drawable/dash_manage_cust"
+            android:title="@string/user_list" />
+
+        <item
+            android:id="@+id/archived_user"
+            android:icon="@android:drawable/ic_menu_revert"
+            android:title="Archived Users" />
+
+
+    </group>
+
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout" />
+</menu>
