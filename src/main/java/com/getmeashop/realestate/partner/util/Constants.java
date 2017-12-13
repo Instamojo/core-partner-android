@@ -11,8 +11,8 @@ public class Constants {
     public final static String first_page_sp = "first_page";
 
 
-    public final static String base_uri = "https://www.staging.getmeashop.org/";
-    public final static String base_uri1 = "https://www.staging.getmeashop.org";
+    public final static String base_uri = "http://api.dev2.gmastesttest.com/";
+    public final static String base_uri1 = "http://api.dev2.gmastesttest.com";
 
 
     public final static String base_suffix = ".staging.getmeashop.org";

@@ -22,14 +22,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
@@ -37,10 +34,10 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.getmeashop.realestate.partner.util.Constants;
-import com.getmeashop.realestate.partner.util.GPSTracker;
 import com.getmeashop.realestate.partner.util.GetRequest;
 import com.getmeashop.realestate.partner.util.ImageConverter;
 import com.getmeashop.realestate.partner.util.Interfaces;
+import com.getmeashop.realestate.partner.util.PatchRequest;
 import com.getmeashop.realestate.partner.util.PostRequest;
 import com.getmeashop.realestate.partner.util.PutRequest;
 import com.google.android.gms.common.ConnectionResult;
@@ -64,7 +61,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -293,7 +289,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                     Utils.showToast("Enter valid contact number", context);
                 } else {
                     if (changed())
-                        new PostRequest((Callbacks) context, uri_update, context);
+                        new PatchRequest((Callbacks) context, uri_update, context);
                 }
             }
         });
@@ -906,7 +902,9 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
 //            domain_name.setText(domain);
 //        }
 
-        if (store_info_domain_status.equalsIgnoreCase("reserved") || store_info_domain_status.equalsIgnoreCase("null")) {
+        if (store_info_domain_status.equalsIgnoreCase("reserved")
+                || store_info_domain_status.equalsIgnoreCase("null")
+                || store_info_domain_status.equalsIgnoreCase("")) {
             select_domain.setText("Change");
             select_domain.setVisibility(View.VISIBLE);
         } else {

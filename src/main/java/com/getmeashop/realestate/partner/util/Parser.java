@@ -253,6 +253,47 @@ public class Parser {
     }
 
 
+    public static HttpPost setUserData(boolean pass, HttpPost httpPost, User user) {
+
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+        // JSONObject jsonObject = new JSONObject();
+        if (user != null) {
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("username", user.getUsername());
+                jsonObject.put("first_name", user.getFname());
+                jsonObject.put("last_name", user.getLname());
+                jsonObject.put("email", user.getEmail());
+                jsonObject.put("id", Integer.parseInt(user.getPid()));
+                if (pass && !user.getPassword().equalsIgnoreCase("") && !user.getPassword().equalsIgnoreCase("null"))
+                    jsonObject.put("password", user.getPassword());
+
+
+                //jsonObject.put("address", user.getAddress());
+                jsonObject.put("contact_number", user.getContact());
+                jsonObject.put("city", user.getCity());
+                jsonObject.put("is_active", !user.getIsActv().equalsIgnoreCase("false"));
+
+                StringEntity en = new StringEntity(jsonObject.toString());
+                en.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httpPost.setEntity(en);
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+
+        return httpPost;
+    }
+
+
     public static HttpPut setUserData(boolean pass, HttpPut httpPost, User user) {
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -292,6 +333,8 @@ public class Parser {
 
         return httpPost;
     }
+
+
 
 
     public static HttpPost setUserData(Context context, HttpPost httpPost, User user) {

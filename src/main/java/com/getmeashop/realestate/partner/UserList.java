@@ -81,8 +81,6 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment UserList.
      */
     // TODO: Rename and change types and number of parameters
@@ -289,7 +287,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
                 String responseString = Utils
                         .convertInputStreamToString(inputStream);
 
-                System.out.println("Login server response__" + responseString);
+                Log.e("server response" , responseString);
                 if (url.equalsIgnoreCase(uri_get_user) || url.equalsIgnoreCase(Constants.uri_get_user))
                     Parser.reset_user_db(responseString, getActivity(), editor, false, 0, true);
                 else if (url.equalsIgnoreCase(uri_next))

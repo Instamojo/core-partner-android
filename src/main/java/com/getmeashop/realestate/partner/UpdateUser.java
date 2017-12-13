@@ -8,8 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -21,18 +20,18 @@ import com.getmeashop.realestate.partner.database.User;
 import com.getmeashop.realestate.partner.util.Constants;
 import com.getmeashop.realestate.partner.util.Interfaces;
 import com.getmeashop.realestate.partner.util.Parser;
-import com.getmeashop.realestate.partner.util.PutRequest;
+import com.getmeashop.realestate.partner.util.PatchRequest;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 
-public class UpdateUser extends AppCompatActivity implements Interfaces.PutCallbacks {
+public class UpdateUser extends AppCompatActivity implements Interfaces.PutCallbacks, Callbacks {
 
     String id;
     User prevUser;
@@ -101,7 +100,7 @@ public class UpdateUser extends AppCompatActivity implements Interfaces.PutCallb
             @Override
             public void onClick(View v) {
                 if (valid()) {
-                    new PutRequest((Interfaces.PutCallbacks) UpdateUser.this, uri_update, getApplicationContext());
+                    new PatchRequest(UpdateUser.this, uri_update, getApplicationContext());
                 }
             }
         });
@@ -153,15 +152,15 @@ public class UpdateUser extends AppCompatActivity implements Interfaces.PutCallb
                 String responseString = Utils
                         .convertInputStreamToString(inputStream);
 
-                System.out.println("Login server response__" + responseString);
+                Log.e("Login server response__", responseString);
                 JSONObject error = null;
                 try {
                     error = new JSONObject(responseString);
-                } catch (JSONException e) {
+                    error_msg = error.optJSONObject("error").optString("message");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                error_msg = error.optJSONObject("error").optString("message");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -169,16 +168,26 @@ public class UpdateUser extends AppCompatActivity implements Interfaces.PutCallb
         }
     }
 
-
     @Override
-    public HttpPut preparePutData(String url, HttpPut httpPost) {
+    public HttpPost preparePostData(String url, HttpPost httpPost) {
 
         User user = new User(Fname.getText().toString(), Lname.getText().toString(), prevUser.getPid(), Username.getText().toString(),
                 Email.getText().toString(), Password.getText().toString(), prevUser.getR_uri(),
                 Contact.getText().toString(), "", active.isChecked() + "", "", "", city.getText().toString());
 
+        return Parser.setUserData(true, httpPost, user);
+    }
 
-        Parser.setUserData(true, httpPost, user);
+
+    @Override
+    public HttpPut preparePutData(String url, HttpPut httpPost) {
+
+        /*User user = new User(Fname.getText().toString(), Lname.getText().toString(), prevUser.getPid(), Username.getText().toString(),
+                Email.getText().toString(), Password.getText().toString(), prevUser.getR_uri(),
+                Contact.getText().toString(), "", active.isChecked() + "", "", "", city.getText().toString());
+
+
+        Parser.setUserData(true, httpPost, user);*/
         return null;
     }
 

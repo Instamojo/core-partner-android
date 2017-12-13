@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import com.getmeashop.realestate.partner.Callbacks;
 import com.getmeashop.realestate.partner.LoginActivity;
@@ -73,8 +74,11 @@ public class GetRequest {
 
                     HttpGet request = Parser.create_get_request(url);
                     try {
-                        request.addHeader("Cookie",
-                                sp.getString("sessionid", ""));
+                        if(sp.getString("sessionid", "").length() !=0)
+                            request.addHeader("Cookie",
+                                    sp.getString("sessionid", "").substring(0, sp.getString("sessionid", "").indexOf("; ") +1 )/* + cookieStore.getCookies().get(0).getName() + "=" + cookieStore.getCookies().get(0).getValue() + ";"*/);
+                        else
+                            request.addHeader("Cookie", cookieStore.getCookies().get(0).getName() + "=" + cookieStore.getCookies().get(0).getValue() + ";");
                     } catch (Exception e) {
 
                     }
@@ -84,6 +88,7 @@ public class GetRequest {
                     HttpConnectionParams.setSoTimeout(httpParameters, 15000);
                     HttpClient httpclient = createHttpClient();
                     request.addHeader("X-Requested-From", "partner-app");
+                    Log.e("url", url);
                     HttpResponse response = httpclient.execute(request);
                     statusCode = response.getStatusLine().getStatusCode();
 
