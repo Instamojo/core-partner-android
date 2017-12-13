@@ -110,7 +110,7 @@ public class UpdateUser extends AppCompatActivity implements Interfaces.PutCallb
 
     @Override
     public void postexecute(String url, int status) {
-        if (url.equalsIgnoreCase(uri_update) && status == 200) {
+        if (url.equalsIgnoreCase(uri_update) && status == 202) {
             dialog.dismiss();
             Utils.showToast("User updated successfully", getApplicationContext());
             finish();
@@ -133,14 +133,14 @@ public class UpdateUser extends AppCompatActivity implements Interfaces.PutCallb
 
     @Override
     public void processResponse(HttpResponse response, String url) {
-        if (response.getStatusLine().getStatusCode() == 200 && url.equalsIgnoreCase(uri_update)) {
+        if (response.getStatusLine().getStatusCode() == 202 && url.equalsIgnoreCase(uri_update)) {
             InputStream inputStream = null;
             try {
                 inputStream = response.getEntity().getContent();
                 String responseString = Utils
                         .convertInputStreamToString(inputStream);
 
-                System.out.println("Login server response__" + responseString);
+                Log.e("Server response", responseString);
                 Parser.update_user_db(responseString, getApplicationContext(), prevUser.getId());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -204,10 +204,12 @@ public class UpdateUser extends AppCompatActivity implements Interfaces.PutCallb
                 && C_Password.getText().toString().length() == 0) {
             Utils.showToast("Password will remain unchanged", getApplicationContext());
             return true;
+        } else if (Password.getText().length() == 0) {
+            Utils.showToast("Password is required", getApplicationContext());
         } else if (Password.getText().length() != 0 && Password.getText().toString().length() < 4) {
             Utils.showToast("Please enter a valid password (at least 4 characters)", getApplicationContext());
         } else if (!Password.getText().toString().equalsIgnoreCase(C_Password.getText().toString())) {
-            Utils.showToast("Password do not match, Please check", getApplicationContext());
+            Utils.showToast("Password and Confirm password do not match, Please check", getApplicationContext());
         } else if (Contact.getText().toString().length() > 0 && Contact.getText().toString().length() != 10) {
             Utils.showToast("Please enter a valid contact number (10 digits)", getApplicationContext());
         } else {

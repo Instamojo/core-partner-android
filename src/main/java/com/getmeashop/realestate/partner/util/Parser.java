@@ -293,6 +293,35 @@ public class Parser {
         return httpPost;
     }
 
+    public static HttpPost setUserDeleteData(boolean pass, HttpPost httpPost, User user) {
+
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+        // JSONObject jsonObject = new JSONObject();
+        if (user != null) {
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("username", user.getUsername());
+                jsonObject.put("email", user.getEmail());
+                jsonObject.put("id", Integer.parseInt(user.getPid()));
+                jsonObject.put("is_active", Boolean.parseBoolean(user.getIsActv()));
+
+                StringEntity en = new StringEntity(jsonObject.toString());
+                en.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httpPost.setEntity(en);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+
+        return httpPost;
+    }
 
     public static HttpPut setUserData(boolean pass, HttpPut httpPost, User user) {
 
@@ -333,8 +362,6 @@ public class Parser {
 
         return httpPost;
     }
-
-
 
 
     public static HttpPost setUserData(Context context, HttpPost httpPost, User user) {

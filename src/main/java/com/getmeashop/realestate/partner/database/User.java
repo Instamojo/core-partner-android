@@ -4,23 +4,23 @@ package com.getmeashop.realestate.partner.database;
  * Created by nikka on 9/8/15.
  */
 public class User {
-    private String fname = "first";
-    private String lname = "first";
-    private String id = "first";
-    private String pid = "first";
-    private String username = "first";
-    private String email = "first";
-    private String password = "first";
-    private String r_uri = "first";
-    private String synced = "true";
-    private String address = "first";
-    private String contact = "first";
-    private String isActv = "first";
+    private String fname = "";
+    private String lname = "";
+    private String id = "";
+    private String pid = "";
+    private String username = "";
+    private String email = "";
+    private String password = "";
+    private String r_uri = "";
+    private String synced = "";
+    private String address = "";
+    private String contact = "";
+    private String isActv = "";
     private boolean isArchv = false;
-    private String created = "first";
-    private String modified = "first";
-    private String city = "city";
-    private String storeinfoid = "storeinfoId";
+    private String created = "";
+    private String modified = "";
+    private String city = "";
+    private String storeinfoid = "";
 
     public User(String fname, String lname, String pid, String username, String email, String password,
                 String r_uri, String contact, String address, String isActv, String created,

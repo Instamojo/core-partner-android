@@ -502,7 +502,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
 
     @Override
     public void postexecute(String url, int status) {
-        if (status == 200 || status == 201) {
+        if (status == 200 || status == 201 || status == 202) {
             if (url.equalsIgnoreCase(uri_update + "?format=json")) {
                 setvalues();
                 setDomainLayout(store_info_domain);
@@ -595,7 +595,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
 
         try {
             if (response.getStatusLine().getStatusCode() == 200 ||
-                    response.getStatusLine().getStatusCode() == 201) {
+                    response.getStatusLine().getStatusCode() == 201 || response.getStatusLine().getStatusCode() == 202) {
                 InputStream inputStream = response.getEntity().getContent();
                 String responseString = Utils
                         .convertInputStreamToString(inputStream);

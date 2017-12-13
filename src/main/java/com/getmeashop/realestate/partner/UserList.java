@@ -1,7 +1,6 @@
 package com.getmeashop.realestate.partner;
 
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,11 +25,10 @@ import android.widget.TextView;
 import com.getmeashop.realestate.partner.database.DatabaseHandler;
 import com.getmeashop.realestate.partner.database.User;
 import com.getmeashop.realestate.partner.util.Constants;
-import com.getmeashop.realestate.partner.util.DeleteRequest;
 import com.getmeashop.realestate.partner.util.GetRequest;
 import com.getmeashop.realestate.partner.util.Interfaces;
 import com.getmeashop.realestate.partner.util.Parser;
-import com.getmeashop.realestate.partner.util.PutRequest;
+import com.getmeashop.realestate.partner.util.PatchRequest;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -206,7 +204,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(adapter != null)
+                if (adapter != null)
                     adapter.setFilter(mtxt.getText().toString());
             }
         });
@@ -230,7 +228,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
     @Override
     public void postexecute(String url, int status) {
 
-        if (status == 200) {
+        if (status == 200 || status == 202) {
             if (url.equalsIgnoreCase(uri_next)) {
                 notifyData(true);
                 request_in_progress = false;
@@ -249,7 +247,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
                 users.set(dlt_positon, dlt_user);
                 adapter.notifyDataSetChanged();
             }
-        }  else if(url.equalsIgnoreCase(delete_url) && status == 400){
+        } else if (url.equalsIgnoreCase(delete_url) && status == 400) {
             Utils.showToast("Something went wrong, please refresh userlist.", getActivity());
         } else if (url.equalsIgnoreCase("failed")) {
             notifyData(false);
@@ -278,16 +276,16 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
 
     @Override
     public void processResponse(HttpResponse response, String url) {
+        InputStream inputStream = null;
+        try {
 
-        if (response.getStatusLine().getStatusCode() == 200) {
-            InputStream inputStream = null;
-            try {
+            inputStream = response.getEntity().getContent();
+            String responseString = Utils
+                    .convertInputStreamToString(inputStream);
 
-                inputStream = response.getEntity().getContent();
-                String responseString = Utils
-                        .convertInputStreamToString(inputStream);
+            if (response.getStatusLine().getStatusCode() == 200 || response.getStatusLine().getStatusCode() == 202) {
 
-                Log.e("server response" , responseString);
+                Log.e("server response", responseString);
                 if (url.equalsIgnoreCase(uri_get_user) || url.equalsIgnoreCase(Constants.uri_get_user))
                     Parser.reset_user_db(responseString, getActivity(), editor, false, 0, true);
                 else if (url.equalsIgnoreCase(uri_next))
@@ -296,17 +294,15 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
                     Parser.reset_user_db(responseString, getActivity(), editor, false, 1, false);
                     search_done = true;
                     previous_query = url;
-                } else if(url.equalsIgnoreCase(delete_url)){
+                } else if (url.equalsIgnoreCase(delete_url)) {
 
-                        System.out.println("Login server response__" + responseString);
-                        Parser.update_user_db(responseString, getActivity(), dlt_user.getId());
+                    Log.e("Server response__", responseString);
+                    Parser.update_user_db(responseString, getActivity(), dlt_user.getId());
 
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
@@ -314,7 +310,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
     @Override
     public HttpPut preparePutData(String url, HttpPut httpPost) {
 
-        if(url.equalsIgnoreCase(delete_url)) {
+        if (url.equalsIgnoreCase(delete_url)) {
             User user = dlt_user;
             if (user.getIsActv().equalsIgnoreCase("true"))
                 user.setIsActv("false");
@@ -328,12 +324,21 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
 
     @Override
     public HttpPost preparePostData(String url, HttpPost httpPost) {
-        return null;
+        if (url.equalsIgnoreCase(delete_url)) {
+            User user = dlt_user;
+            if (user.getIsActv().equalsIgnoreCase("true"))
+                user.setIsActv("false");
+            else
+                user.setIsActv("true");
+
+            httpPost = Parser.setUserDeleteData(false, httpPost, user);
+        }
+        return httpPost;
     }
 
 
     private void notifyData(Boolean update) {
-        if(getActivity() != null) {
+        if (getActivity() != null) {
             DatabaseHandler dbh = new DatabaseHandler(getActivity());
             if (!update) {
                 users = dbh.getAllUsers();
@@ -394,18 +399,18 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
     }
 
 
-    private void createDeleteDialog(final User user, final int pos){
+    private void createDeleteDialog(final User user, final int pos) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         String action = "";
-        if(user.getIsActv().equalsIgnoreCase("true")){
+        if (user.getIsActv().equalsIgnoreCase("true")) {
             action = "Deactivate";
-        }else{
+        } else {
             action = "Activate";
         }
 
-        builder.setTitle(action +  " " + user.getUsername());
+        builder.setTitle(action + " " + user.getUsername());
         builder.setMessage("Do you really want to " + action.toLowerCase() + " user ?");
         builder.setPositiveButton(action, new DialogInterface.OnClickListener() {
             @Override
@@ -414,7 +419,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
                 dlt_positon = pos;
                 dlt_user = user;
                 delete_url = Constants.base_uri1 + user.getR_uri();
-                new PutRequest(UserList.this, Constants.base_uri1 + user.getR_uri(), getActivity());
+                new PatchRequest(UserList.this, Constants.base_uri1 + user.getR_uri(), getActivity());
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
