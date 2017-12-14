@@ -19,7 +19,8 @@
             <RelativeLayout
                 android:id="@+id/details"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="#e6e6e6">
 
                 <LinearLayout
                     android:id="@+id/ll_title"
@@ -42,7 +43,7 @@
                         android:paddingTop="10dp"
                         android:text="N.A."
                         android:textColor="@android:color/white"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -53,13 +54,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_title"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginTop="15dp"
-                    android:paddingLeft="10dp"
-                    android:text="N.A."
-                    android:singleLine="true"
                     android:ellipsize="end"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:text="N.A."
+                    android:textSize="18dp" />
 
                 <LinearLayout
                     android:id="@+id/buttons1"
@@ -84,8 +84,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:visibility="gone"
-                        android:text="Edit Payment info">
+                        android:text="Edit Payment info"
+                        android:visibility="gone">
 
                     </Button>
 

@@ -53,11 +53,14 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,20 +81,66 @@ import java.util.List;
 public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces.PutCallbacks, Interfaces.removeImg, BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, Interfaces.enterLocation,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    /**
+     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
+     */
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
+    /**
+     * The fastest rate for active location updates. Exact. Updates will never be more frequent
+     * than this value.
+     */
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    protected static final String TAG = "location-updates-sample";
+    // Keys for storing activity state in the Bundle.
+    protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
+    protected final static String LOCATION_KEY = "location-key";
+    protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
     private final static int CAMERA_REQUEST = 1888;
     private final static int GALLERY_REQUEST = 1889;
+    /**
+     * Provides the entry point to Google Play services.
+     */
+    protected GoogleApiClient mGoogleApiClient;
+    /**
+     * Stores parameters for requests to the FusedLocationProviderApi.
+     */
+    protected LocationRequest mLocationRequest;
+    /**
+     * Represents a geographical location.
+     */
+    protected Location mCurrentLocation;
+    // UI Widgets.
+    protected Button mStartUpdatesButton;
+    protected Button mStopUpdatesButton;
+    protected TextView mLastUpdateTimeTextView;
+    protected TextView mLatitudeTextView;
+    protected TextView mLongitudeTextView;
+    // Labels.
+    protected String mLatitudeLabel;
+    protected String mLongitudeLabel;
+    protected String mLastUpdateTimeLabel;
+    /**
+     * Tracks the status of the location updates request. Value changes when the user presses the
+     * Start Updates and Stop Updates buttons.
+     */
+    protected Boolean mRequestingLocationUpdates;
+    /**
+     * Time when the location was updated represented as a String.
+     */
+    protected String mLastUpdateTime;
     Button update, update_shipping;
     File fileUri;
     int clicked;
     ProgressDialog dialog;
     Context context;
     String uri_update = "", uri_shipping = "";
-
     String uri_themes, uri_themes_put, uri_lookup_domain, uri_reserve_domain = Constants.uri_domain_register;
     String store_info_contact, store_info_address, store_name, store_minimum, store_shipping, store_image;
     String theme_name, store_info_domain, store_info_domain_status, check_domain, domain_error;
     Toolbar mtoolbar;
     Button select_theme, select_domain, cancel_domain;
+    HashMap<String, String> url_maps = new HashMap<String, String>();
     private EditText contact, address, name, minimum, shipping, edit_domain;
     private TextView theme, domain_name, err_domain;
     private ImageView store_logo;
@@ -99,72 +148,12 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
     private String image, id;
     private SharedPreferences.Editor editor;
     private SliderLayout mDemoSlider;
-    HashMap<String, String> url_maps = new HashMap<String, String>();
     private boolean select_theme_pressed = false, domain_available = false;
     private Button rotate;
-
     private ArrayList<String> domain_suggestions;
     private LinearLayout domain_list;
     private Button getLocation;
     private TextView location;
-
-
-    protected static final String TAG = "location-updates-sample";
-
-    /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-     */
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
-
-    /**
-     * The fastest rate for active location updates. Exact. Updates will never be more frequent
-     * than this value.
-     */
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
-    // Keys for storing activity state in the Bundle.
-    protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
-    protected final static String LOCATION_KEY = "location-key";
-    protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
-
-    /**
-     * Provides the entry point to Google Play services.
-     */
-    protected GoogleApiClient mGoogleApiClient;
-
-    /**
-     * Stores parameters for requests to the FusedLocationProviderApi.
-     */
-    protected LocationRequest mLocationRequest;
-
-    /**
-     * Represents a geographical location.
-     */
-    protected Location mCurrentLocation;
-
-    // UI Widgets.
-    protected Button mStartUpdatesButton;
-    protected Button mStopUpdatesButton;
-    protected TextView mLastUpdateTimeTextView;
-    protected TextView mLatitudeTextView;
-    protected TextView mLongitudeTextView;
-
-    // Labels.
-    protected String mLatitudeLabel;
-    protected String mLongitudeLabel;
-    protected String mLastUpdateTimeLabel;
-
-    /**
-     * Tracks the status of the location updates request. Value changes when the user presses the
-     * Start Updates and Stop Updates buttons.
-     */
-    protected Boolean mRequestingLocationUpdates;
-
-    /**
-     * Time when the location was updated represented as a String.
-     */
-    protected String mLastUpdateTime;
     private String userid;
 
     /**
@@ -231,7 +220,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
 
         //uri_themes = Constants.base_uri + "mobile/theme/?userid=" + userid + "&format=json";
         uri_themes = Constants.base_uri + "mobile/themes/?format=json";
-        uri_themes_put = Constants.base_uri + "partner/api/theme/?userid=" + userid;
+        uri_themes_put = Constants.uri_store_info + id + "/";
         dialog = new ProgressDialog(context);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage(" Checking details Please wait...");
@@ -314,7 +303,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
 
                 if (select_theme_pressed) {
                     theme_name = (new ArrayList<String>(url_maps.keySet())).get(mDemoSlider.getCurrentPosition());
-                    new PostRequest(EditInfo.this, uri_themes_put, EditInfo.this);
+                    new PatchRequest(EditInfo.this, uri_themes_put, EditInfo.this);
                 } else {
                     new GetRequest(EditInfo.this, uri_themes, EditInfo.this);
                 }
@@ -357,12 +346,13 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                             check_domain = check_domain.substring(check_domain.indexOf("."));
                         } else
                             try {
-                                uri_lookup_domain = Constants.uri_lookup_domain + "?searchstring=" + URLEncoder.encode(check_domain, "UTF-8");
-                            } catch (UnsupportedEncodingException e) {
+                                uri_lookup_domain = Constants.uri_lookup_domain + "?query=" + URLEncoder.encode(check_domain, "UTF-8");
+                            } catch (Exception e) {
                                 Utils.showToast("Please enter a valid url", EditInfo.this);
                                 e.printStackTrace();
                             }
                         new GetRequest(EditInfo.this, uri_lookup_domain, EditInfo.this);
+
                     }
                 }
             }
@@ -594,18 +584,21 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
     public void processResponse(HttpResponse response, String url) {
 
         try {
+
+            InputStream inputStream = response.getEntity().getContent();
+            String responseString = Utils
+                    .convertInputStreamToString(inputStream);
+            Log.e("response", responseString);
+
             if (response.getStatusLine().getStatusCode() == 200 ||
                     response.getStatusLine().getStatusCode() == 201 || response.getStatusLine().getStatusCode() == 202) {
-                InputStream inputStream = response.getEntity().getContent();
-                String responseString = Utils
-                        .convertInputStreamToString(inputStream);
                 JSONObject jsonResponse = new JSONObject(responseString);
                 if (url.equalsIgnoreCase(uri_update) || url.equalsIgnoreCase(uri_update + "?format=json")) {
                     store_name = jsonResponse.getString("shop_name");
                     store_info_contact = jsonResponse.getString("shop_contact_info");
                     store_info_address = jsonResponse.getString("shop_address");
-                    store_info_domain_status = jsonResponse.getString("domain_status");
-                    store_info_domain = jsonResponse.getString("domain_reserved");
+                    //store_info_domain_status = jsonResponse.getString("domain_status");
+                    //store_info_domain = jsonResponse.getString("domain_reserved");
                     theme_name = jsonResponse.getString("theme");
                     if (!jsonResponse.getString("aboutus_image").equalsIgnoreCase("") && !jsonResponse.getString("aboutus_image").equalsIgnoreCase("null")) {
                         Calendar calendar = Calendar.getInstance();
@@ -628,7 +621,10 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                         }
                     }
                 } else if (url.equalsIgnoreCase(uri_lookup_domain)) {
-                    JSONArray jarray = jsonResponse.getJSONArray("suggestion");
+                    JSONArray jarrayobj = jsonResponse.getJSONArray("objects");
+                    JSONObject jObjobj = jarrayobj.getJSONObject(0);
+                    JSONObject jObjResults = jObjobj.getJSONObject("results");
+                    JSONArray jarray = jObjResults.getJSONArray("suggestion");
                     domain_suggestions = new ArrayList<String>();
                     for (int i = 0; i < jarray.length(); i++) {
                         JSONObject object = jarray.getJSONObject(i);
@@ -642,9 +638,6 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                     }
                 }
             } else if (url.equalsIgnoreCase(uri_lookup_domain) && response.getStatusLine().getStatusCode() == 400) {
-                InputStream inputStream = response.getEntity().getContent();
-                String responseString = Utils
-                        .convertInputStreamToString(inputStream);
                 JSONObject jobject = new JSONObject(responseString);
                 String msg = "";
                 for (int i = 0; i < jobject.names().length(); i++) {
@@ -659,7 +652,6 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                 domain_available = false;
                 domain_error = msg;
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -720,6 +712,8 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             builder.addPart("shop_address", new StringBody(address.getText().toString(), ContentType.TEXT_PLAIN));
             builder.addPart("shop_contact_info", new StringBody(contact.getText().toString(), ContentType.TEXT_PLAIN));
 
+            if (theme_name != null && !theme_name.equalsIgnoreCase(""))
+                builder.addPart("theme", new StringBody(theme_name, ContentType.TEXT_PLAIN));
             if (mCurrentLocation != null) {
                 builder.addPart("latitude", new StringBody(mCurrentLocation.getLatitude() + "", ContentType.TEXT_PLAIN));
                 builder.addPart("longitude", new StringBody(mCurrentLocation.getLongitude() + "", ContentType.TEXT_PLAIN));
@@ -741,21 +735,30 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             HttpEntity http = builder.build();
             http.isChunked();
             httpPost.setEntity(http);
-        } else {
-
+        } else if (url.equalsIgnoreCase(uri_lookup_domain)) {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            if (url.equalsIgnoreCase(uri_themes_put)) {
-                nameValuePairs.add(new BasicNameValuePair("template", theme_name));
 
-            } else if (url.equalsIgnoreCase(uri_reserve_domain)) {
-                nameValuePairs.add(new BasicNameValuePair("domain", check_domain));
-                nameValuePairs.add(new BasicNameValuePair("userid", id));
-            }
 
             try {
+                nameValuePairs.add(new BasicNameValuePair("query", URLEncoder.encode(check_domain, "UTF-8")));
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else if (url.equalsIgnoreCase(uri_reserve_domain)) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("domain", check_domain);
+                jsonObject.put("userid", userid);
+
+
+                StringEntity en = new StringEntity(jsonObject.toString());
+                en.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httpPost.setEntity(en);
+            } catch (UnsupportedEncodingException e) {
                 // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }

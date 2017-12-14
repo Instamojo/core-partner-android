@@ -30,7 +30,6 @@ public class Constants {
     public final static String uri_shipping_info = base_uri + "api/partner/shipping/";
     public final static String uri_pay_info = base_uri + "api/partner/userchequepayment/";
     public final static String uri_db_search = base_uri + "api/partner/users/?format=json&username__contains=";
-    public final static String uri_lookup_domain = base_uri + "domains/suggestions/";
-    public final static String uri_domain_register = base_uri + "partner/domain/reserve/";
-
+    public final static String uri_lookup_domain = base_uri + "api/partner/domain-suggestion/";
+    public final static String uri_domain_register = base_uri + "api/partner/domain-suggestion/";
 }

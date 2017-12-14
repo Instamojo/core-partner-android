@@ -25,10 +25,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.getmeashop.realestate.partner.util.Constants;
 import com.getmeashop.realestate.partner.util.ImageConverter;
 import com.getmeashop.realestate.partner.util.Interfaces;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -119,14 +119,14 @@ public class Utils {
                 if (isConnectionFast(info.getType(), info.getSubtype())) {
                     return true;
                 } else {
-                   // Toast.makeText(c, "Connection Too Slow.Try Again with faster connection", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(c, "Connection Too Slow.Try Again with faster connection", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
         }
 
         //Toast.makeText(c, "No internet connection available",
-          //      Toast.LENGTH_SHORT).show();
+        //      Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -182,7 +182,7 @@ public class Utils {
                 check.delete();
             }
             fos = new FileOutputStream(path);
-            if(compress)
+            if (compress)
                 scaledImage.compress(Bitmap.CompressFormat.JPEG, quality, fos);
             else
                 scaledImage.compress(Bitmap.CompressFormat.PNG, quality, fos);
@@ -360,8 +360,12 @@ public class Utils {
     }
 
     public static void showToast(String message, Context context) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
+        try {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
