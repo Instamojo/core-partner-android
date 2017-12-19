@@ -390,7 +390,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-           finish();
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -599,7 +599,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                     store_info_contact = jsonResponse.getString("shop_contact_info");
                     store_info_address = jsonResponse.getString("shop_address");
                     //store_info_domain_status = jsonResponse.getString("domain_status");
-                    //store_info_domain = jsonResponse.getString("domain_reserved");
+                    store_info_domain = jsonResponse.getString("domain_reserved");
                     theme_name = jsonResponse.getString("theme");
                     if (!jsonResponse.getString("aboutus_image").equalsIgnoreCase("") && !jsonResponse.getString("aboutus_image").equalsIgnoreCase("null")) {
                         Calendar calendar = Calendar.getInstance();
@@ -772,24 +772,24 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
      */
 
     private void setvalues() {
-        if (store_name.equalsIgnoreCase("null")) {
+        if (store_name == null || store_name.equalsIgnoreCase("null")) {
             name.setText("");
         } else {
             name.setText(store_name);
         }
 
-        if (theme_name.equalsIgnoreCase("null")) {
+        if (theme_name == null || theme_name.equalsIgnoreCase("null")) {
             theme.setText("");
         } else {
             theme.setText(theme_name);
         }
 
-        if (store_info_contact.equalsIgnoreCase("null")) {
+        if (store_info_contact == null || store_info_contact.equalsIgnoreCase("null")) {
             contact.setText("");
         } else {
             contact.setText(store_info_contact);
         }
-        if (store_info_address.equalsIgnoreCase("null")) {
+        if (store_info_address == null || store_info_address.equalsIgnoreCase("null")) {
             address.setText("");
         } else {
             address.setText(store_info_address);
@@ -802,12 +802,12 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
     }
 
     public void setvaluesShipping() {
-        if (store_minimum.equalsIgnoreCase("null")) {
+        if (store_minimum == null || store_minimum.equalsIgnoreCase("null")) {
             minimum.setText("");
         } else {
             minimum.setText(store_minimum);
         }
-        if (store_shipping.equalsIgnoreCase("null")) {
+        if (store_shipping == null || store_shipping.equalsIgnoreCase("null")) {
             shipping.setText("");
         } else {
             shipping.setText(store_shipping);
