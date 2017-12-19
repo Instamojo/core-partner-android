@@ -21,6 +21,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -378,7 +379,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_edit_info, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -388,12 +389,12 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == android.R.id.home) {
+           finish();
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
 
     /**
@@ -870,7 +871,11 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         mDemoSlider.setVisibility(View.VISIBLE);
         mDemoSlider.removeAllSliders();
         select_theme.setText("Select");
+        int counter = 0;
         for (String name : url_maps.keySet()) {
+            if (counter++ > 2)
+                break;
+
             TextSliderView textSliderView = new TextSliderView(this);
             // initialize a SliderLayout
             textSliderView

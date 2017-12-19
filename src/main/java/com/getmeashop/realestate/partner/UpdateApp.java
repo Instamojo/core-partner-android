@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -51,9 +50,9 @@ public class UpdateApp extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        if(sp.getInt("update_version", 0) > versionCode) {
-                whatsNew.setText(sp.getString("update_whatsnew", ""));
-            if(sp.getString("update_type","apk").equalsIgnoreCase("apk")) {
+        if (sp.getInt("update_version", 0) > versionCode) {
+            whatsNew.setText(sp.getString("update_whatsnew", ""));
+            if (sp.getString("update_type", "apk").equalsIgnoreCase("apk")) {
                 UpdateApplication updateTask = new UpdateApplication();
                 updateTask.execute(sp.getString("update_url", ""));
             } else {
@@ -67,12 +66,10 @@ public class UpdateApp extends AppCompatActivity {
         }
 
 
-
-
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(sp.getString("update_type","apk").equalsIgnoreCase("apk")) {
+                if (sp.getString("update_type", "apk").equalsIgnoreCase("apk")) {
                     UpdateApplication retry = new UpdateApplication();
                     retry.execute(sp.getString("update_url", ""));
                 } else {
@@ -84,9 +81,9 @@ public class UpdateApp extends AppCompatActivity {
     }
 
 
-
-    class UpdateApplication extends AsyncTask<String,Integer,Void> {
+    class UpdateApplication extends AsyncTask<String, Integer, Void> {
         boolean success = false;
+
         @Override
         protected Void doInBackground(String... arg0) {
             try {
@@ -109,7 +106,7 @@ public class UpdateApp extends AppCompatActivity {
 
                         outputFile = new File(file, "update.apk");
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     outputFile.delete();
                     outputFile = new File(file, "update.apk");
                 }
@@ -161,7 +158,7 @@ public class UpdateApp extends AppCompatActivity {
             //mProgressDialog.setIndeterminate(false);
             //mProgressDialog.setMax(100);
             //mProgressDialog.setProgress(progress[0]);
-            if(progress[0] > 0) {
+            if (progress[0] > 0) {
                 progressBar.setVisibility(View.VISIBLE);
                 progressBar.setMax(100);
                 progressBar.setProgress(progress[0]);
@@ -174,7 +171,7 @@ public class UpdateApp extends AppCompatActivity {
             // showDialog("Downloaded " + result + " bytes");
             text_status.setText("Please update to latest version");
             loading_spinner.setVisibility(View.GONE);
-            if(success) {
+            if (success) {
                 Utils.showToast(UpdateApp.this, "Please press update button");
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(new File("/mnt/sdcard/Download/.MbPartner/update.apk")), "application/vnd.android.package-archive");
