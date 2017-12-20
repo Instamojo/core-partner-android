@@ -871,25 +871,24 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         mDemoSlider.setVisibility(View.VISIBLE);
         mDemoSlider.removeAllSliders();
         select_theme.setText("Select");
-        int counter = 0;
         for (String name : url_maps.keySet()) {
-            if (counter++ > 2)
-                break;
 
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(url_maps.get(name))
-                    .imagePlaceHolder(R.drawable.icon_no_image)
-                    .setScaleType(BaseSliderView.ScaleType.CenterInside)
-                    .setOnSliderClickListener(this);
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra", name);
+            if (name.equalsIgnoreCase("eshop") || name.equalsIgnoreCase("max")) {
+                TextSliderView textSliderView = new TextSliderView(this);
+                // initialize a SliderLayout
+                textSliderView
+                        .description(name)
+                        .image(url_maps.get(name))
+                        .imagePlaceHolder(R.drawable.icon_no_image)
+                        .setScaleType(BaseSliderView.ScaleType.CenterInside)
+                        .setOnSliderClickListener(this);
+                textSliderView.bundle(new Bundle());
+                textSliderView.getBundle()
+                        .putString("extra", name);
 
 
-            mDemoSlider.addSlider(textSliderView);
+                mDemoSlider.addSlider(textSliderView);
+            }
         }
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOutSlide);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
