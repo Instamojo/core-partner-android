@@ -23,7 +23,7 @@ public class Constants {
 
 
     public final static String hosted_url = "http://updates.getmeashop.org/api/android/apps/?app=com.getmeashop.realestate.partner";
-    public final static String update_check_url = "http://updates.getmeashop.org/api/android/apps/?app=com.getmeashop.realestate.partner";
+    public final static String update_check_url = "http://updates.getmeashop.org/api/android/apps/?app=com.getmeashop.partner";
     public final static String uri_get_user = base_uri + "api/partner/users/?format=json&limit=10&order_by=-modified";
     public final static String uri_send_user = base_uri + "api/partner/users/?format=json";
     public final static String uri_store_info = base_uri + "api/partner/storeinfo/";

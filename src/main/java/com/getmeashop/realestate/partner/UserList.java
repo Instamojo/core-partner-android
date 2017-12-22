@@ -227,6 +227,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
 
     @Override
     public void postexecute(String url, int status) {
+        dialog.dismiss();
 
         if (status == 200 || status == 202) {
             if (url.equalsIgnoreCase(uri_next)) {
@@ -264,8 +265,10 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
 
     @Override
     public void preexecute(String url) {
+        dialog.show();
+
         if (!refreshing && !url.equalsIgnoreCase(uri_next)) {
-            dialog.setMessage("Getting user list please wait");
+            dialog.setMessage("Updating user list please wait");
             dialog.show();
         }
         if (url.equalsIgnoreCase(delete_url)) {
@@ -368,6 +371,12 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
         if (notify)
             notifyData(false);
         notify = false;
+
+        refreshing = true;
+        if (mtxt.getText().toString().length() > 0)
+            mtxt.setText("");
+        uri_get_user = Constants.uri_send_user + "?format=json&order_by=-modified";
+        new GetRequest((Callbacks) UserList.this, uri_get_user, getActivity());
     }
 
     @Override
