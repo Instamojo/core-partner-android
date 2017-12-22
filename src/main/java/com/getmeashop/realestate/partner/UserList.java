@@ -150,7 +150,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
 
         dialog = new ProgressDialog(getActivity());
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("Getting user profiles, Please wait...");
+        dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
 
         if (dbh.getAllUsers().size() == 0) {
@@ -268,7 +268,7 @@ public class UserList extends Fragment implements Callbacks, Interfaces.shouldNo
         dialog.show();
 
         if (!refreshing && !url.equalsIgnoreCase(uri_next)) {
-            dialog.setMessage("Updating user list please wait");
+            dialog.setMessage("Please wait");
             dialog.show();
         }
         if (url.equalsIgnoreCase(delete_url)) {

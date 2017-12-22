@@ -599,7 +599,8 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                     store_info_contact = jsonResponse.getString("shop_contact_info");
                     store_info_address = jsonResponse.getString("shop_address");
                     //store_info_domain_status = jsonResponse.getString("domain_status");
-                    store_info_domain = jsonResponse.getString("domain_reserved");
+                    if (jsonResponse.has("domain_reserved"))
+                        store_info_domain = jsonResponse.getString("domain_reserved");
                     theme_name = jsonResponse.getString("theme");
                     if (!jsonResponse.getString("aboutus_image").equalsIgnoreCase("") && !jsonResponse.getString("aboutus_image").equalsIgnoreCase("null")) {
                         Calendar calendar = Calendar.getInstance();
@@ -620,8 +621,9 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                         if (object.optString("image").indexOf("//") == 0) {
                             url_maps.put(object.optString("template"), "http:" + object.optString("image"));
                         } else {
-                            url_maps.put(object.optString("template"), Constants.base_uri1 + object.optString("image"));
+                            url_maps.put(object.optString("template"), object.optString("image"));
                         }
+                        Log.e("theme image", object.optString("image"));
                     }
                 } else if (url.equalsIgnoreCase(uri_lookup_domain)) {
                     JSONArray jarrayobj = jsonResponse.getJSONArray("objects");
@@ -867,6 +869,9 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
     @Override
     public void onSliderClick(BaseSliderView slider) {
 
+        Intent intent = new Intent(EditInfo.this, ThemeView.class);
+        intent.putExtra("image", slider.getBundle().getString("image"));
+        startActivity(intent);
     }
 
     public void setThemesLayout() {
@@ -879,13 +884,15 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             // initialize a SliderLayout
             textSliderView
                     .description(name)
-                    .image(url_maps.get(name))
+                    .image(url_maps.get(name).replace(".png", ".jpg"))
                     .imagePlaceHolder(R.drawable.icon_no_image)
                     .setScaleType(BaseSliderView.ScaleType.CenterInside)
                     .setOnSliderClickListener(this);
             textSliderView.bundle(new Bundle());
             textSliderView.getBundle()
                     .putString("extra", name);
+            textSliderView.getBundle()
+                    .putString("image", url_maps.get(name));
 
 
             mDemoSlider.addSlider(textSliderView);

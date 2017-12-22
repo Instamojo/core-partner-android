@@ -18,11 +18,9 @@
     <permission
         android:name="com.getmeashop.realestate.partner.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-
     <permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:protectionLevel="signature" />
-
     <permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:protectionLevel="signature" />
@@ -43,9 +41,9 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            android:windowSoftInputMode="adjustResize|stateVisible"></activity>
+            android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
-            android:name="com.getmeashop.realestate.partner.UpdateUser"
+            android:name=".UpdateUser"
             android:label="@string/title_activity_update_user"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -53,25 +51,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:label="DashBoard"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"></activity>
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.getmeashop.realestate.partner.UserChequeList"
-            android:screenOrientation="portrait"
-            android:label="Payment">
+            android:name=".UserChequeList"
+            android:label="Payment"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
-            android:name="com.getmeashop.realestate.partner.EditPayment"
+            android:name=".EditPayment"
             android:label="Payment Details"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -79,7 +74,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.getmeashop.realestate.partner.UserChequeList" />
         </activity>
-
         <activity
             android:name=".EditInfo"
             android:label="Edit Portal info"
@@ -89,20 +83,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".SplashScreen"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_main">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <service
-            android:name="com.getmeashop.realestate.partner.util.UpdateChekerService"
+            android:name=".util.UpdateChekerService"
             android:exported="false" />
 
         <activity
@@ -117,7 +111,7 @@
 
         <receiver
             android:name="com.google.android.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
 
                 <!-- Receives the actual messages. -->
@@ -132,6 +126,8 @@
         <service
             android:name=".GCMIntentService"
             android:enabled="true" />
+
+        <activity android:name=".ThemeView"></activity>
     </application>
 
 </manifest>
