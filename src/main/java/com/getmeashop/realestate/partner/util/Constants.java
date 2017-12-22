@@ -11,11 +11,11 @@ public class Constants {
     public final static String first_page_sp = "first_page";
 
 
-    public final static String base_uri = "http://api.staging.getmeashop.org/";
-    public final static String base_uri1 = "http://api.staging.getmeashop.org";
+    public final static String base_uri = "https://www.getmeashop.com/";
+    public final static String base_uri1 = "https://www.getmeashop.com";
 
 
-    public final static String base_suffix = ".staging.getmeashop.org";
+    public final static String base_suffix = ".getmeashop.com";
     public final static String GCM_SENDER_ID = "279782731317";
 
 //    public final static String base_uri = "http://www.mbtest.angrynerd.in/";

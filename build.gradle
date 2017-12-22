@@ -20,8 +20,8 @@ android {
         applicationId "com.getmeashop.partner"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 22
-        versionName "2.1"
+        versionCode 1
+        versionName "1.1"
     }
     buildTypes {
         release {

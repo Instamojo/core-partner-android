@@ -615,6 +615,8 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                     url_maps = new HashMap<String, String>();
                     for (int i = 0; i < jarray.length(); i++) {
                         JSONObject object = jarray.getJSONObject(i);
+                        if (!object.optString("template").equalsIgnoreCase("eshop") && !object.optString("template").equalsIgnoreCase("max"))
+                            continue;
                         if (object.optString("image").indexOf("//") == 0) {
                             url_maps.put(object.optString("template"), "http:" + object.optString("image"));
                         } else {
@@ -873,22 +875,21 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         select_theme.setText("Select");
         for (String name : url_maps.keySet()) {
 
-            if (name.equalsIgnoreCase("eshop") || name.equalsIgnoreCase("max")) {
-                TextSliderView textSliderView = new TextSliderView(this);
-                // initialize a SliderLayout
-                textSliderView
-                        .description(name)
-                        .image(url_maps.get(name))
-                        .imagePlaceHolder(R.drawable.icon_no_image)
-                        .setScaleType(BaseSliderView.ScaleType.CenterInside)
-                        .setOnSliderClickListener(this);
-                textSliderView.bundle(new Bundle());
-                textSliderView.getBundle()
-                        .putString("extra", name);
+            TextSliderView textSliderView = new TextSliderView(this);
+            // initialize a SliderLayout
+            textSliderView
+                    .description(name)
+                    .image(url_maps.get(name))
+                    .imagePlaceHolder(R.drawable.icon_no_image)
+                    .setScaleType(BaseSliderView.ScaleType.CenterInside)
+                    .setOnSliderClickListener(this);
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra", name);
 
 
-                mDemoSlider.addSlider(textSliderView);
-            }
+            mDemoSlider.addSlider(textSliderView);
+
         }
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOutSlide);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
