@@ -272,6 +272,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="Domain name"
                                 android:lines="1"
+                                android:maxLines="1"
                                 android:visibility="gone" />
                         </RelativeLayout>
 
