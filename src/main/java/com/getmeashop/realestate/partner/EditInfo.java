@@ -626,20 +626,25 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                         Log.e("theme image", object.optString("image"));
                     }
                 } else if (url.equalsIgnoreCase(uri_lookup_domain)) {
-                    JSONArray jarrayobj = jsonResponse.getJSONArray("objects");
-                    JSONObject jObjobj = jarrayobj.getJSONObject(0);
-                    JSONObject jObjResults = jObjobj.getJSONObject("results");
-                    JSONArray jarray = jObjResults.getJSONArray("suggestion");
-                    domain_suggestions = new ArrayList<String>();
-                    for (int i = 0; i < jarray.length(); i++) {
-                        JSONObject object = jarray.getJSONObject(i);
-                        if (object.getString("status").equalsIgnoreCase("available")) {
-                            domain_available = true;
-                            if (object.getString("domain").contains(check_domain))
-                                domain_suggestions.add(0, object.getString("domain"));
-                            else
-                                domain_suggestions.add(object.getString("domain"));
+                    try {
+
+                        JSONArray jarrayobj = jsonResponse.getJSONArray("objects");
+                        JSONObject jObjobj = jarrayobj.getJSONObject(0);
+                        JSONObject jObjResults = jObjobj.getJSONObject("results");
+                        JSONArray jarray = jObjResults.getJSONArray("suggestion");
+                        domain_suggestions = new ArrayList<String>();
+                        for (int i = 0; i < jarray.length(); i++) {
+                            JSONObject object = jarray.getJSONObject(i);
+                            if (object.getString("status").equalsIgnoreCase("available")) {
+                                domain_available = true;
+                                if (object.getString("domain").contains(check_domain))
+                                    domain_suggestions.add(0, object.getString("domain"));
+                                else
+                                    domain_suggestions.add(object.getString("domain"));
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             } else if (url.equalsIgnoreCase(uri_lookup_domain) && response.getStatusLine().getStatusCode() == 400) {

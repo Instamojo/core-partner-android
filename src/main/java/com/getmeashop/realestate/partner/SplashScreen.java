@@ -22,10 +22,8 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.getmeashop.realestate.partner.util.Constants;
 import com.getmeashop.realestate.partner.util.GetRequest;
-import com.getmeashop.realestate.partner.util.PostRequest;
 import com.getmeashop.realestate.partner.util.UpdateChekerService;
 import com.google.android.gcm.GCMRegistrar;
-import com.joshdholtz.sentry.Sentry;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -42,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
 
 public class SplashScreen extends AppCompatActivity implements Callbacks {
 
@@ -95,13 +95,15 @@ public class SplashScreen extends AppCompatActivity implements Callbacks {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        Sentry.init(
-                this.getApplicationContext(), "https://watchdog.getmeashop.org",
-                "https://f6198d3fe0d84fedb48fc7c1914f6f27:5986397abc18420a8a25658d623fdac3@watchdog.getmeashop.org/18");
-        if (!isTaskRoot()) {
-            finish();
-            return;
-        }
+        Context ctx = this.getApplicationContext();
+
+        // Use the Sentry DSN (client key) from the Project Settings page on Sentry
+        String sentryDsn = "https://e81e26c80ef645d9a940dc06ea1139d4:7cc20af3fb894a0cbe312ddec175297e@watchdog.getmeashop.org/54";
+        Sentry.init(sentryDsn, new AndroidSentryClientFactory(ctx));
+
+        // Alternatively, if you configured your DSN in a `sentry.properties`
+        // file (see the configuration documentation).
+        Sentry.init(new AndroidSentryClientFactory(ctx));
         setContentView(R.layout.activity_splash_screen);
 
 

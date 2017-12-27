@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements Callbacks, Interf
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
 
-
         sp = getSharedPreferences(Constants.User_sp, Context.MODE_PRIVATE);
         editor = sp.edit();
 
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements Callbacks, Interf
 
 
         uri_logout = base_uri + "partner/logout/?registration_id=" + GCMRegistrar.getRegistrationId(this) + "&device_id=" + Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);;
+                Settings.Secure.ANDROID_ID);
         // creating urls based on usernames
 
 
