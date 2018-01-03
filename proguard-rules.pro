@@ -16,7 +16,7 @@
 # and specify the fully qualified class name to the JavaScript interface
 # class:
 -dontwarn org.apache.**
--keepclassmembers class com.getmeashop.realestate.partner.WebViewForApp {
+-keepclassmembers class com.getmeashop.partner.WebViewForApp {
    public *;
 }
 -keep class org.apache.http.** { *; }
@@ -102,7 +102,7 @@
   public static final android.os.Parcelable$Creator *;
 }
 
--keep class com.getmeashop.realestate.partner.SerializableCookie {*;}
--dontwarn com.getmeashop.realestate.partner.SerializableCookie.*
--keep class com.getmeashop.realestate.partner.PersistentCookieStore {*;}
--dontwarn com.getmeashop.realestate.partner.PersistentCookieStore.*
+-keep class com.getmeashop.partner.SerializableCookie {*;}
+-dontwarn com.getmeashop.partner.SerializableCookie.*
+-keep class com.getmeashop.partner.PersistentCookieStore {*;}
+-dontwarn com.getmeashop.partner.PersistentCookieStore.*

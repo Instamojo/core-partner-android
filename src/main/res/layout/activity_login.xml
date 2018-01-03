@@ -64,7 +64,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <com.getmeashop.realestate.partner.util.CustomTextInputLayout
+            <com.getmeashop.partner.util.CustomTextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintTextAppearance="@style/TextAppearance.AppCompat">
@@ -77,9 +77,9 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
-            </com.getmeashop.realestate.partner.util.CustomTextInputLayout>
+            </com.getmeashop.partner.util.CustomTextInputLayout>
 
-            <com.getmeashop.realestate.partner.util.CustomTextInputLayout
+            <com.getmeashop.partner.util.CustomTextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintTextAppearance="@style/TextAppearance.AppCompat">
@@ -95,7 +95,7 @@
                     android:imeOptions="actionUnspecified"
                     android:maxLines="1"
                     android:singleLine="true" />
-            </com.getmeashop.realestate.partner.util.CustomTextInputLayout>
+            </com.getmeashop.partner.util.CustomTextInputLayout>
 
             <Button
                 android:id="@+id/email_sign_in_button"
