@@ -89,10 +89,10 @@ public class UpdateApp extends AppCompatActivity {
             try {
 
 
-                String PATH = "/mnt/sdcard/Download/.MbPartner/";
+                String PATH = "/mnt/sdcard/Download/.CorePartner/";
                 File file = new File(PATH);
                 file.mkdirs();
-                File outputFile = new File(file, "update.apk");
+                File outputFile = new File(file, "core_partner_update.apk");
 
                 try {
                     if (outputFile.exists()) {
@@ -104,11 +104,11 @@ public class UpdateApp extends AppCompatActivity {
                         }
                         outputFile.delete();
 
-                        outputFile = new File(file, "update.apk");
+                        outputFile = new File(file, "core_partner_update.apk");
                     }
                 } catch (Exception e) {
                     outputFile.delete();
-                    outputFile = new File(file, "update.apk");
+                    outputFile = new File(file, "core_partner_update.apk");
                 }
 
 
@@ -174,7 +174,7 @@ public class UpdateApp extends AppCompatActivity {
             if (success) {
                 Utils.showToast(UpdateApp.this, "Please press update button");
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(new File("/mnt/sdcard/Download/.MbPartner/update.apk")), "application/vnd.android.package-archive");
+                intent.setDataAndType(Uri.fromFile(new File("/mnt/sdcard/Download/.CorePartner/core_partner_update.apk")), "application/vnd.android.package-archive");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // without this flag android returned a intent error!
                 startActivity(intent);
             } else {
