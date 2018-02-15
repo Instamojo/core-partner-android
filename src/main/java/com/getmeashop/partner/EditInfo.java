@@ -156,6 +156,11 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
     private Button getLocation;
     private TextView location;
     private String userid;
+    private EditText custom_email_et;
+    private Button custom_email_btn;
+    private String custom_email;
+    private String url_send_custom_email = Constants.base_uri + "api/partner/book-email/?format=json";
+    private String responseString;
 
     /**
      * Stores parameters for requests to the FusedLocationProviderApi.
@@ -181,6 +186,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         check_domain = "";
         domain_available = false;
         theme_name = "";
+        custom_email = "";
 
 
         sp = this.getSharedPreferences("Users", Context.MODE_PRIVATE);
@@ -218,6 +224,10 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         userid = getIntent().getStringExtra("id");
         uri_update = Constants.uri_store_info + id + "/";
         uri_shipping = Constants.uri_shipping_info + id + "/";
+
+
+        custom_email_et = (EditText) findViewById(R.id.custom_email);
+        custom_email_btn = (Button) findViewById(R.id.submitemail);
 
         //uri_themes = Constants.base_uri + "mobile/theme/?userid=" + userid + "&format=json";
         uri_themes = Constants.base_uri + "mobile/themes/?format=json";
@@ -370,6 +380,17 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             @Override
             public void onClick(View v) {
                 saveImgAfterRotate();
+            }
+        });
+        custom_email_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (custom_email_et.getText().length() <= 0) {
+                    Utils.showToast("Invalid email", EditInfo.this);
+                    return;
+                } else {
+                    new PostRequest(EditInfo.this, url_send_custom_email, EditInfo.this);
+                }
             }
         });
     }
@@ -532,6 +553,8 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                 check_domain = "";
                 domain_available = false;
                 setDomainLayout(store_info_domain);
+            } else if (url.equalsIgnoreCase(url_send_custom_email)) {
+                Utils.showToast("Email set", EditInfo.this);
             } else if (url.equalsIgnoreCase(uri_shipping + "?format=json")) {
                 setvaluesShipping();
             } else if (url.equalsIgnoreCase(uri_shipping)) {
@@ -540,7 +563,9 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                 finish();
             }
         } else if (status == 400) {
-            if (url.equalsIgnoreCase(uri_reserve_domain)) {
+            if (url.equalsIgnoreCase(url_send_custom_email)) {
+                Utils.showToast(responseString, EditInfo.this);
+            } else if (url.equalsIgnoreCase(uri_reserve_domain)) {
                 err_domain.setVisibility(View.VISIBLE);
                 cancel_domain.setVisibility(View.VISIBLE);
                 err_domain.setText("Domain is available but reserved by another broker");
@@ -587,7 +612,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         try {
 
             InputStream inputStream = response.getEntity().getContent();
-            String responseString = Utils
+            responseString = Utils
                     .convertInputStreamToString(inputStream);
             Log.e("response", responseString);
 
@@ -601,11 +626,13 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                     //store_info_domain_status = jsonResponse.getString("domain_status");
                     if (jsonResponse.has("domain_reserved"))
                         store_info_domain = jsonResponse.getString("domain_reserved");
+                    if (jsonResponse.has("email_booked"))
+                        custom_email = jsonResponse.getString("email_booked");
                     theme_name = jsonResponse.getString("theme");
-                    if (!jsonResponse.getString("aboutus_image").equalsIgnoreCase("") && !jsonResponse.getString("aboutus_image").equalsIgnoreCase("null")) {
+                    if (!jsonResponse.getString("logo").equalsIgnoreCase("") && !jsonResponse.getString("logo").equalsIgnoreCase("null")) {
                         Calendar calendar = Calendar.getInstance();
                         java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
-                        store_image = Constants.base_uri1 + jsonResponse.getString("aboutus_image") + "?time=" + URLEncoder.encode(currentTimestamp.toString(), "UTF-8");
+                        store_image = /*Constants.base_uri1 + */jsonResponse.getString("logo") + "?time=" + URLEncoder.encode(currentTimestamp.toString(), "UTF-8");
                     } else {
                         store_image = "null";
                     }
@@ -616,7 +643,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
                     url_maps = new HashMap<String, String>();
                     for (int i = 0; i < jarray.length(); i++) {
                         JSONObject object = jarray.getJSONObject(i);
-                        if (!object.optString("template").equalsIgnoreCase("eshop") && !object.optString("template").equalsIgnoreCase("max"))
+                        if (!object.optString("template").equalsIgnoreCase("eshop") && !object.optString("template").equalsIgnoreCase("flex"))
                             continue;
                         if (object.optString("image").indexOf("//") == 0) {
                             url_maps.put(object.optString("template"), "http:" + object.optString("image"));
@@ -666,6 +693,8 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -687,14 +716,14 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             }
             if (image.equalsIgnoreCase("")
                     || image.equalsIgnoreCase("null")) {
-                builder.addPart("aboutus_image", new StringBody("", ContentType.TEXT_PLAIN));
-            } else if (!image.contains(Constants.base_uri)) {
+                builder.addPart("logo", new StringBody("", ContentType.TEXT_PLAIN));
+            } else if (!image.startsWith("http")) {
                 File imFile = new File(image);
                 if (!imFile.exists()) {
                     image_exists = false;
                 }
                 FileBody imBody = new FileBody(imFile);
-                builder.addPart("aboutus_image", imBody);
+                builder.addPart("logo", imBody);
             }
             // httpPost.addHeader("Content-Length", "0");
 
@@ -731,14 +760,14 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             }
             if (image.equalsIgnoreCase("")
                     || image.equalsIgnoreCase("null")) {
-                builder.addPart("aboutus_image", new StringBody("", ContentType.TEXT_PLAIN));
-            } else if (!image.contains(Constants.base_uri)) {
+                builder.addPart("logo", new StringBody("", ContentType.TEXT_PLAIN));
+            } else if (!image.startsWith("http")) {
                 File imFile = new File(image);
                 if (!imFile.exists()) {
                     image_exists = false;
                 }
                 FileBody imBody = new FileBody(imFile);
-                builder.addPart("aboutus_image", imBody);
+                builder.addPart("logo", imBody);
             }
             // httpPost.addHeader("Content-Length", "0");
 
@@ -771,6 +800,22 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else if (url.equalsIgnoreCase(url_send_custom_email)) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("email", custom_email_et.getText().toString());
+                jsonObject.put("userid", userid);
+
+
+                StringEntity en = new StringEntity(jsonObject.toString());
+                en.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httpPost.setEntity(en);
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return httpPost;
     }
@@ -787,6 +832,11 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
             name.setText(store_name);
         }
 
+        if (custom_email == null || custom_email.equalsIgnoreCase("null")) {
+            custom_email_et.setText("");
+        } else {
+            custom_email_et.setText(custom_email);
+        }
         if (theme_name == null || theme_name.equalsIgnoreCase("null")) {
             theme.setText("");
         } else {
@@ -930,6 +980,7 @@ public class EditInfo extends AppCompatActivity implements Callbacks, Interfaces
         } else {
             select_domain.setVisibility(View.GONE);
         }
+
 
         if (store_info_domain_status.equalsIgnoreCase("null")) {
             domain_name.setText("Currently not Reserved");

@@ -335,7 +335,7 @@ public class Utils {
         if (img == null || img.equals("null")) {
             img = "null";
             imgv.setImageResource(R.drawable.icon_no_image);
-        } else if (!img.contains(Constants.base_uri)) {
+        } else if (!img.contains(Constants.base_uri) && !img.startsWith("http")) {
             File imgFile = new File(img);
             if (imgFile.exists()) {
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
